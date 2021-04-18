@@ -1,15 +1,16 @@
 node{
 
-   def tomcatWeb = 'C:\\Program Files\\Apache Software Foundation\\Tomcat 8.5\\webapps'
-   def tomcatBin = 'C:\\Program Files\\Apache Software Foundation\\Tomcat 8.5\\bin'
-   def tomcatStatus = ''
+  // def tomcatWeb = 'C:\\Program Files\\Apache Software Foundation\\Tomcat 8.5\\webapps'
+   //def tomcatBin = 'C:\\Program Files\\Apache Software Foundation\\Tomcat 8.5\\bin'
+   //def tomcatStatus = ''
+   def mvnHome = tool name:'MAVEN_HOME', type:'maven'
    stage('SCM Checkout'){
      git 'https://github.com/MrunmayiK/Deploy-to-Tomcat-Pipeline.git'
    }
-   stage('Compile-Package-create-war-file'){
+   stage('Build'){
       // Get maven home path
-      def mvnHome =  tool name: 'MAVEN_HOME', type: 'maven'   
-      bat "${mvnHome}/bin/mvn package"
+     // def mvnHome =  tool name: 'MAVEN_HOME', type: 'maven'   
+      sh "${mvnHome}/bin/mvn package"
       }
 /*   stage ('Stop Tomcat Server') {
                bat ''' @ECHO OFF
@@ -24,7 +25,7 @@ node{
 '''
    }*/
    stage('Deploy to Tomcat'){
-     bat "copy target\\Deploy-to-Tomcat-Pipeline.war \"${tomcatWeb}\\Deploy-to-Tomcat-Pipeline.war\""
+     sh "cp target\\Deploy-to-Tomcat-Pipeline.war \"${tomcatWeb}\\Deploy-to-Tomcat-Pipeline.war\""
    }
       stage ('Start Tomcat Server') {
          sleep(time:5,unit:"SECONDS") 
